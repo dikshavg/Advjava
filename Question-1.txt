@@ -1,0 +1,47 @@
+Question-1:
+step-1 : Create table with name BookDetails71 from SQL Command Line.
+BookDetails71(code, name, Author, Price, qty)
+Primary key : code
+
+step-2 : Insert min 5 Product details from SQL Command Line.
+
+step-3 : Construct JDBC Application to display all Product details.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+import java.sql.*;
+
+public class DBcon1 {
+	
+		public static void main(String[] args)
+		{
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+				Statement stm=con.createStatement();
+				ResultSet rs=stm.executeQuery("select * from BookDetails71");
+				System.out.println("------BookDetails------");
+				while(rs.next())
+				{
+					System.out.println(rs.getInt(1)+"\t"
+							+rs.getString(2)+"\t"
+							+rs.getString(3)+"\t"
+							+rs.getFloat(4)+"\t"
+							+rs.getInt(5));
+							
+				}
+				con.close();
+			}catch(Exception e) {
+				
+				System.err.println("Database connection error: " + e.getMessage());
+				//e.printStackTrace();
+			}
+			
+		}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ouput:
+
+------BookDetails------
+1144	Spring	ABC	1500.0	5
+1133	Advancejava	PQR	1100.0	9
+1122	Corejava	XYZ	1500.0	15
