@@ -1,0 +1,49 @@
+Assignment 2:
+Construct JDBC Application to read product details from Console and insert into
+DB Table'Product71';?
+-------------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+import java.sql.*;
+import java.util.Scanner;
+public class Assignment2 {
+	public static void main(String[] args)
+	{
+	Scanner s = new Scanner(System.in);
+	try(s;){
+		System.out.println("Enter the productid:");
+		int pid = Integer.parseInt(s.nextLine());
+		System.out.println("Enter the productname:");
+		String pname = s.nextLine();
+		System.out.println("Enter the productprice:");
+		float pprice = Float.parseFloat(s.nextLine());
+		System.out.println("Enter the productqty:");
+		int pqty = Integer.parseInt(s.nextLine());
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+		Statement stm=con.createStatement();
+		int k = stm.executeUpdate("insert into Product71 values("+pid+",'"+ pname+"',"+pprice+","+pqty+")");
+		if(k>0) {	
+			System.out.println("Product Details inserted Successfully...");
+		}
+			con.close();
+		}catch(Exception e){
+			e.printStackTrace();
+	}
+		
+	}
+	
+
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+output:
+Enter the productid:
+10
+Enter the productname:
+tv
+Enter the productprice:
+300
+Enter the productqty:
+10
+Product Details inserted Successfully...
