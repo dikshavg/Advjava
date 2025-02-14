@@ -1,0 +1,60 @@
+Question 4:
+Write a the NonSelect-query for(Create/Insert/Update/Delete)
+create table Emp71(id varchar2(10),name varchar2(15),desg varchar2(10),bsal number(10),primary
+key(id))?
+----------------------------------------------------------------------------------------------------------------------------------
+package Test;
+import java.sql.*;
+import java.util.*;
+public class DBcon4 {
+	public static void main(String[] args)
+	{
+		Scanner s = new Scanner(System.in);
+		try(s;){
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+			Statement stm=con.createStatement();
+			System.out.println("Enter the NonSelect-query(Create/Insert/Update/Delete)");
+			String qry = s.nextLine();
+			int k = stm.executeUpdate(qry);
+			if(k>=0) {
+				System.out.println("Query executed Successfully...");
+				System.out.println("The value in k : "+k);
+			}
+			con.close();
+		}
+		catch(SQLSyntaxErrorException sqe) {
+			System.out.println(sqe.getMessage());
+		}
+		catch(Exception e) {
+		e.printStackTrace();
+			
+	}
+	}
+
+}
+-----------------------------------------------------------------------------------------------------------------------------------
+o/p:(Create operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+create table Emp71(id varchar2(10),name varchar2(15),desg varchar2(10),bsal number(10),primary
+key(id))
+Query executed Successfully...
+The value in k : 0
+
+o/p:(Insert operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+insert into Emp71 values(&#39;E11&#39;,&#39;Alex&#39;,&#39;SE&#39;,35000)
+Query executed Successfully...
+The value in k : 1
+
+o/p:(Update Operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+update Emp71 set bsal=40000 where id=&#39;E11&#39;
+Query executed Successfully...
+The value in k : 1
+
+o/p:(Delete Operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+delete from Emp71 where id=&#39;E11&#39;
+Query executed Successfully...
+The value in k : 1
