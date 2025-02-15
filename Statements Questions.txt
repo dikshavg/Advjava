@@ -1,0 +1,450 @@
+Question-1:
+step-1 : Create table with name BookDetails71 from SQL Command Line.
+BookDetails71(code, name, Author, Price, qty)
+Primary key : code
+
+step-2 : Insert min 5 Product details from SQL Command Line.
+
+step-3 : Construct JDBC Application to display all Product details.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+import java.sql.*;
+
+public class DBcon1 {
+	
+		public static void main(String[] args)
+		{
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+				Statement stm=con.createStatement();
+				ResultSet rs=stm.executeQuery("select * from BookDetails71");
+				System.out.println("------BookDetails------");
+				while(rs.next())
+				{
+					System.out.println(rs.getInt(1)+"\t"
+							+rs.getString(2)+"\t"
+							+rs.getString(3)+"\t"
+							+rs.getFloat(4)+"\t"
+							+rs.getInt(5));
+							
+				}
+				con.close();
+			}catch(Exception e) {
+				
+				System.err.println("Database connection error: " + e.getMessage());
+				//e.printStackTrace();
+			}
+			
+		}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ouput:
+
+------BookDetails------
+1144	Spring	ABC	1500.0	5
+1133	Advancejava	PQR	1100.0	9
+1122	Corejava	XYZ	1500.0	15
+=================================================================================================================================================================================
+Assignment-1:
+step-1 : Create table with name Product71 from SQL Command Line.
+Product71(code, name, price, qty)
+Primary key : code
+
+step-2 : Insert min 5 Product details from SQL Command Line.
+
+step-3 : Construct JDBC Application to display all Product details.
+--------------------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+
+
+import java.sql.*;
+
+
+	public class Assignment1 {
+
+		public static void main(String[] args)
+		{
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+				Statement stm=con.createStatement();
+				ResultSet rs=stm.executeQuery("select * from Product71");
+				System.out.println("------Product71------");
+				while(rs.next())
+				{
+					System.out.println(rs.getInt(1)+"\t"
+							+rs.getString(2)+"\t"
+							+rs.getInt(3)+"\t"
+							+rs.getInt(4));
+							
+							
+				}
+				con.close();
+			}catch(Exception e) {
+				
+				System.err.println("Database connection error: " + e.getMessage());
+				//e.printStackTrace();
+			}
+			
+		}
+	}
+--------------------------------------------------------------------------------------------------------------------------------------------------
+output:
+------Product71------
+101	Laptop	799	50
+102	Smartphone	499	25
+103	Headphones	149	50
+104	Keyboard	79	30
+============================================================================================================================================================================================
+Question 2:
+(Construct JDBC Application to read BookDetails71 from Console Input and insert into DB-Table'BookDetails71';?
+----------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+import java.sql.*;
+import java.util.*;
+public class DBcon2 {
+	
+	public static void main(String[] args)
+	{
+	Scanner s = new Scanner(System.in);
+	try(s;){
+		System.out.println("Enter the Book-Code:");
+		int bCode = Integer.parseInt(s.nextLine());
+		System.out.println("Enter the Book-Name:");
+		String bName = s.nextLine();
+		System.out.println("Enter the Book-Author:");
+		String bAuthor = s.nextLine();
+		System.out.println("Enter the Book-Price:");
+		float bPrice = Float.parseFloat(s.nextLine());
+		System.out.println("Enter the Book-Qty:");
+		int bQty = Integer.parseInt(s.nextLine());
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+		Statement stm=con.createStatement();
+		int k = stm.executeUpdate("insert into  values("+bCode+",'"+bName+"','"+bAuthor+"',"+bPrice+","+bQty+")");
+				if(k>0) {	
+					System.out.println("Book Details inserted Successfully...");
+				}
+				con.close();
+	}catch(Exception e){
+		e.printStackTrace();	
+		}
+	}
+	
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------
+output:
+Enter the Book-Code:
+1155
+Enter the Book-Name:
+JRT
+Enter the Book-Author:
+TRY
+Enter the Book-Price:
+1700
+Enter the Book-Qty:
+17
+Book Details inserted Successfully...
+============================================================================================================================================================================================
+Assignment 2:
+Construct JDBC Application to read product details from Console and insert into
+DB Table'Product71';?
+-------------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+import java.sql.*;
+import java.util.Scanner;
+public class Assignment2 {
+	public static void main(String[] args)
+	{
+	Scanner s = new Scanner(System.in);
+	try(s;){
+		System.out.println("Enter the productid:");
+		int pid = Integer.parseInt(s.nextLine());
+		System.out.println("Enter the productname:");
+		String pname = s.nextLine();
+		System.out.println("Enter the productprice:");
+		float pprice = Float.parseFloat(s.nextLine());
+		System.out.println("Enter the productqty:");
+		int pqty = Integer.parseInt(s.nextLine());
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+		Statement stm=con.createStatement();
+		int k = stm.executeUpdate("insert into Product71 values("+pid+",'"+ pname+"',"+pprice+","+pqty+")");
+		if(k>0) {	
+			System.out.println("Product Details inserted Successfully...");
+		}
+			con.close();
+		}catch(Exception e){
+			e.printStackTrace();
+	}
+		
+	}
+	
+
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+output:
+Enter the productid:
+10
+Enter the productname:
+tv
+Enter the productprice:
+300
+Enter the productqty:
+10
+Product Details inserted Successfully...
+============================================================================================================================================================================================
+Question 3:
+Construct JDBC Application to perform Update and delete operations on BookDetails71?
+-----------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+
+import java.sql.*;
+
+import java.util.*;
+
+public class DBcon3 {
+	
+	public static void main(String[] args)
+	{
+		Scanner s = new Scanner(System.in);
+		try(s;){
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+			Statement stm=con.createStatement();
+			System.out.println("Enter the BookCode to perform Update/Delete operations:");
+			int bCode = s.nextInt();
+			ResultSet rs = stm.executeQuery
+					("select * from BookDetails71 where code="+bCode+"");
+			if(rs.next()) {
+				System.out.println("*******Choice******");
+				System.out.println("\t1.Update"
+						+ "\n\t2.Delete");
+				System.out.println("Enter your choice:");
+				int choice = s.nextInt();
+				switch(choice)
+				{
+				case 1:
+					System.out.println("-----Perform Update Operations------");
+					System.out.println("Old Book Price:"+rs.getFloat(4));
+					System.out.println("Enter the New Book Price:");
+					float nPrice = s.nextFloat();	
+					System.out.println("Existing Book qty:"+rs.getInt(5));
+					System.out.println("Enter the New Book qty:");
+					int nQty = s.nextInt();
+					int k = stm.executeUpdate
+							("Update BookDetails71 set price="+nPrice+",qty=qty+"+nQty+"where code="+bCode+"");
+							if(k>0) {
+							System.out.println("Book details updated Successfully...");
+							}
+							break;		
+						
+							case 2:
+								int k2 = stm.executeUpdate
+								("delete from BookDetails71 where code="+bCode+"");
+								if(k2>0) {
+								System.out.println("Book Details deleted Successfully...");
+								}	
+								break;
+							default:
+							System.out.println("Invalid Choice...");	
+				}//end of switch
+			}else {
+			System.out.println("Invalid BookCode...");
+			}
+			con.close();
+			}catch(Exception e) {	
+				e.printStackTrace();
+			}
+		}
+	}
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+output:
+
+o/p:(Update Operation)
+Enter the BookCode to perform Update/Delete operations:
+1122
+*******Choice******
+1.Update
+2.Delete
+Enter your choice:
+1
+-----Perform Update Operations------
+Old Book Price:1200.0
+Enter the New Book Price:
+1500
+
+Existing Book qty:10
+Enter the New Book qty:
+5
+Book details updated Successfully...
+
+o/p:(Delete Operation)
+
+Enter the BookCode to perform Update/Delete operations:
+1155
+*******Choice******
+1.Update
+2.Delete
+Enter your choice:
+2
+Book Details deleted Successfully...
+============================================================================================================================================================================================
+Assignment-3:
+Construct JDBC Application to perform Update and Delete Operations on Product71 based Product-code?
+--------------------------------------------------------------------------------------------------------------------------------------
+package Test;
+
+import java.sql.*;
+
+import java.util.*;
+
+public class DBcon3 {
+	
+	public static void main(String[] args)
+	{
+		Scanner s = new Scanner(System.in);
+		try(s;){
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+			Statement stm=con.createStatement();
+			System.out.println("Enter the BookCode to perform Update/Delete operations:");
+			int bCode = s.nextInt();
+			ResultSet rs = stm.executeQuery
+					("select * from BookDetails71 where code="+bCode+"");
+			if(rs.next()) {
+				System.out.println("*******Choice******");
+				System.out.println("\t1.Update"
+						+ "\n\t2.Delete");
+				System.out.println("Enter your choice:");
+				int choice = s.nextInt();
+				switch(choice)
+				{
+				case 1:
+					System.out.println("-----Perform Update Operations------");
+					System.out.println("Old Book Price:"+rs.getFloat(4));
+					System.out.println("Enter the New Book Price:");
+					float nPrice = s.nextFloat();	
+					System.out.println("Existing Book qty:"+rs.getInt(5));
+					System.out.println("Enter the New Book qty:");
+					int nQty = s.nextInt();
+					int k = stm.executeUpdate
+							("Update BookDetails71 set price="+nPrice+",qty=qty+"+nQty+"where code="+bCode+"");
+							if(k>0) {
+							System.out.println("Book details updated Successfully...");
+							}
+							break;		
+						
+							case 2:
+								int k2 = stm.executeUpdate
+								("delete from BookDetails71 where code="+bCode+"");
+								if(k2>0) {
+								System.out.println("Book Details deleted Successfully...");
+								}	
+								break;
+							default:
+							System.out.println("Invalid Choice...");	
+				}//end of switch
+			}else {
+			System.out.println("Invalid BookCode...");
+			}
+			con.close();
+			}catch(Exception e) {	
+				e.printStackTrace();
+			}
+		}
+	}
+--------------------------------------------------------------------------------------------------------------------------------------
+output:
+Enter the BookCode to perform Update/Delete operations:
+1133
+*******Choice******
+	1.Update
+	2.Delete
+Enter your choice:
+1
+-----Perform Update Operations------
+Old Book Price:1100.0
+Enter the New Book Price:
+1200
+Existing Book qty:9
+Enter the New Book qty:
+10
+Book details updated Successfully...
+--------------------------------------------------------------------
+output:
+Enter the BookCode to perform Update/Delete operations:
+1133
+*******Choice******
+	1.Update
+	2.Delete
+Enter your choice:
+2
+Book Details deleted Successfully...
+============================================================================================================================================================================================
+Question 4:
+Write a the NonSelect-query for(Create/Insert/Update/Delete)
+create table Emp71(id varchar2(10),name varchar2(15),desg varchar2(10),bsal number(10),primary
+key(id))?
+----------------------------------------------------------------------------------------------------------------------------------
+package Test;
+import java.sql.*;
+import java.util.*;
+public class DBcon4 {
+	public static void main(String[] args)
+	{
+		Scanner s = new Scanner(System.in);
+		try(s;){
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","tiger");
+			Statement stm=con.createStatement();
+			System.out.println("Enter the NonSelect-query(Create/Insert/Update/Delete)");
+			String qry = s.nextLine();
+			int k = stm.executeUpdate(qry);
+			if(k>=0) {
+				System.out.println("Query executed Successfully...");
+				System.out.println("The value in k : "+k);
+			}
+			con.close();
+		}
+		catch(SQLSyntaxErrorException sqe) {
+			System.out.println(sqe.getMessage());
+		}
+		catch(Exception e) {
+		e.printStackTrace();
+			
+	}
+	}
+
+}
+-----------------------------------------------------------------------------------------------------------------------------------
+o/p:(Create operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+create table Emp71(id varchar2(10),name varchar2(15),desg varchar2(10),bsal number(10),primary
+key(id))
+Query executed Successfully...
+The value in k : 0
+
+o/p:(Insert operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+insert into Emp71 values(&#39;E11&#39;,&#39;Alex&#39;,&#39;SE&#39;,35000)
+Query executed Successfully...
+The value in k : 1
+
+o/p:(Update Operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+update Emp71 set bsal=40000 where id=&#39;E11&#39;
+Query executed Successfully...
+The value in k : 1
+
+o/p:(Delete Operation)
+Enter the NonSelect-query(Create/Insert/Update/Delete)
+delete from Emp71 where id=&#39;E11&#39;
+Query executed Successfully...
+The value in k : 1
