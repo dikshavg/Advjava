@@ -1,0 +1,115 @@
+
+
+Assignment01:
+============
+1)
+step-1 : Create the following DB Tables
+StuData(stuId,stuRollNo,stuName,stuBranch)
+StuAddress(stuId,stuHno,city,pincode)
+StuContact(stuId,mid,phno)
+
+step-2 : Construct Procedure to insert student details into DB Tables.
+step-3 : Construct JDBC Application to execute Procedure.
+-----------------------------------------------------------------------------------
+package test;
+import java.sql.*;
+import java.util.*;
+public class StudentTable {
+	public static void main(String[] args)
+	{
+	Scanner s = new Scanner(System.in);
+	try(s;){
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection
+		("jdbc:oracle:thin:@localhost:1521:xe","system","tiger");
+		CallableStatement cs = con.prepareCall
+				("{call InsertStu71(?,?,?,?,?,?,?,?,?)}");
+		System.out.println("Enter stu id:");
+		String id=s.nextLine();
+		System.out.println("Enter Student roll no: ");
+		int srollno = Integer.parseInt(s.nextLine());
+		System.out.println("Enter Student name: ");
+		String sname = s.nextLine();
+		System.out.println("Enter Student branch: ");
+		String sbranch = s.nextLine();
+		System.out.println("Enter stu house no: ");
+		String shno = s.nextLine();
+		System.out.println("Enter stu city name: ");
+		String scity = s.nextLine();
+		System.out.println("Enter Stu pincode: ");
+		Long spc = Long.parseLong(s.nextLine());
+		System.out.println("Enter stu mail id: ");
+		String smid = s.nextLine();
+		System.out.println("Enter stu phone no: ");
+		String phno = s.nextLine();
+		
+		cs.setString(1, id);
+		cs.setInt(2, srollno);
+		cs.setString(3, sname);
+		cs.setString(4, sbranch);
+		cs.setString(5, shno);
+		cs.setString(6, scity);
+		cs.setLong(7, spc);
+		cs.setString(8, smid);
+		cs.setString(9, phno);
+		cs.execute();
+		System.out.println("values inserted successfully");
+	}
+	catch(Exception e)
+	{
+System.out.println(e.getMessage());		}
+}
+
+}
+============================================================================================
+
+2)
+
+step-1 :Construct Procedure to display the complete details of student based on stuId.
+step-2 :Construct JDBC Application to execute Procedure.
+------------------------------------------------------------------------------------------
+package test;
+import java.sql.*;
+import java.util.*;
+public class StudentTable_1 {
+	public static void main(String[] args)
+	{
+	Scanner s = new Scanner(System.in);
+	try(s;){
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection
+		("jdbc:oracle:thin:@localhost:1521:xe","system","tiger");
+		CallableStatement cs = con.prepareCall
+				("{call  retrieveStud71(?,?,?,?,?,?,?,?,?)}");
+		System.out.println("Enter the stud - id to retrieve details: ");
+		int id= Integer.parseInt(s.nextLine());
+		cs.setInt(1, id);
+		cs.registerOutParameter(2, Types.INTEGER);
+		cs.registerOutParameter(3, Types.VARCHAR);
+		cs.registerOutParameter(4, Types.VARCHAR);
+		cs.registerOutParameter(5, Types.INTEGER);
+		cs.registerOutParameter(6, Types.VARCHAR);
+		cs.registerOutParameter(7, Types.BIGINT);
+		cs.registerOutParameter(8, Types.VARCHAR);
+		cs.registerOutParameter(9, Types.VARCHAR);
+		cs.execute();
+		System.out.println("***Student Details***");
+		System.out.println("Stud-Id: "+id);
+		System.out.println("stu rollno: "+cs.getInt(2));
+		System.out.println("stu Name: "+cs.getString(3));
+		System.out.println("stu branch: "+cs.getString(4));
+		System.out.println("stu houseno: "+cs.getInt(5));
+		System.out.println("stu city: "+cs.getString(6));
+		System.out.println("stu pincode: "+cs.getLong(7));
+		System.out.println("stu MailId: "+cs.getString(8));
+		System.out.println("stu phno: "+cs.getString(9));
+		con.close();
+	}
+	catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+}
+
+}
+	
