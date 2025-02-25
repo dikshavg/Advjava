@@ -1,0 +1,101 @@
+Servlet program Demo:
+---------------------
+step1:Customer.html file
+------
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="dis" method="post">
+CustId:<input type="text" name="cid"><br>
+CustNmae:<input type="text" name="cname"><br>
+CustCity:<input type="text" name="ccity"><br>
+CustMailId:<input type="text" name="cmid"><br>
+CustPhoneNo:<input type="text" name="cphno"><br>
+<input type="submit" value="Display">
+</form>
+
+</body>
+</html>
+------------------------------------------------------------------
+step2:web.xml file
+------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+<welcome-file-list>
+<welcome-file>
+Customer.html
+</welcome-file>
+</welcome-file-list>
+</web-app>
+------------------------------------------------
+step3:DisplayServlet.java file
+------------------------------
+package test;
+import java.io.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+@WebServlet("/dis")
+public class DisplayServlet implements Servlet{
+
+	@Override
+	public void init(ServletConfig arg0) throws ServletException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+		
+		String cId=req.getParameter("cid");
+		String cName=req.getParameter("cname");
+		String cCity=req.getParameter("ccity");
+		String mId=req.getParameter("cmid");
+	    long phNo=Long.parseLong(req.getParameter("cphno"));
+		PrintWriter pw=res.getWriter();
+		res.setContentType("text/html");
+		pw.println("CustId:"+cId+"<br>");
+		pw.println("CustName:"+cName+"<br>");
+		pw.println("CustCity:"+cCity+"<br>");
+		pw.println("CustMailId:"+mId+"<br>");
+		pw.println("CustPhoneNo:"+phNo+"<br>");
+		
+	}
+
+	
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public String getServletInfo() {
+		// TODO Auto-generated method stub
+		return "This Servlet will display Customer details";
+	}
+	
+
+	@Override
+	public ServletConfig getServletConfig() {
+		// TODO Auto-generated method stub
+		return this.getServletConfig();
+	}
+
+	}
+-------------------------------------------------------------------------------------------
+output:
+CustId:1
+CustNme:kiran
+CustCity:Hyderabad
+CustMail:kvg@gmai.com
+CustPhone:123456789
+===========================================================================================
+
+	
+
+	
+
+
