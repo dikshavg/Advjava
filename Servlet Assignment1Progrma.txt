@@ -1,0 +1,116 @@
+Servlet Assignment1Progrma:
+=============================
+user.html:
+---------
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<form action="dis" method="post">
+Name:<input type="text" name="name"><br>
+Password:<input type="text" name="psw"><br>
+FirstName:<input type="text" name="fname"><br>
+LastName:<input type="text" name="lname"><br>
+City:<input type="text" name="city"><br>
+MailId:<input type="text" name="mid"><br>
+PhoneNo:<input type="text" name="phno"><br>
+<input type="submit" value="Display">
+</form>
+
+</body>
+</html>
+--------------------------------------------------------------------
+web.xml:
+--------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+<welcome-file-list>
+<welcome-file>
+user.html
+</welcome-file>
+</welcome-file-list>
+</web-app>
+-----------------------------------------------
+DisplayServlet2.java:
+---------------------
+package test;
+import java.io.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+@WebServlet("/dis")
+public class DisplayServlet2 implements Servlet {
+	@Override
+	public void init(ServletConfig arg0) throws ServletException {
+		
+		
+	}
+@Override
+	public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+		  String username = request.getParameter("name");
+	        String password = request.getParameter("psw");
+	        String firstname = request.getParameter("fname");
+	        String lastname = request.getParameter("lname");
+	        String city = request.getParameter("city");
+	        String email = request.getParameter("mid");
+	        String phone = request.getParameter("phno");
+
+	     
+	        response.setContentType("text/html");
+
+	   
+	        PrintWriter out = response.getWriter();
+	        out.println("<html><body>");
+	        out.println("<h2>User Details:</h2>");
+	        out.println("<p><b>UserName:</b> " + username + "</p>");
+	        out.println("<p><b>Password:</b> " + password + "</p>");
+	        out.println("<p><b>First Name:</b> " + firstname + "</p>");
+	        out.println("<p><b>Last Name:</b> " + lastname + "</p>");
+	        out.println("<p><b>City:</b> " + city + "</p>");
+	        out.println("<p><b>Email:</b> " + email + "</p>");
+	        out.println("<p><b>Phone Number:</b> " + phone + "</p>");
+	        out.println("</body></html>");
+		
+	}
+@Override
+	public void destroy() {
+		
+		
+	}
+	@Override
+	public String getServletInfo() {
+		
+		return "This Servlet will display Userdeatils";
+	}
+
+
+	@Override
+	public ServletConfig getServletConfig() {
+		
+		return this.getServletConfig();
+	}
+
+}
+--------------------------------------------------------------------
+output:
+-------
+User Details:
+UserName: diksha
+
+Password: 123456
+
+First Name: diksha
+
+Last Name: vg
+
+City: hyderabad
+
+Email: g@mail.com
+
+Phone Number: 123456789
+===========================================
+
