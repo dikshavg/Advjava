@@ -1,0 +1,132 @@
+
+Employee.html
+------------
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="dis" method="post">
+		Employee-Id:<input type="text" name="eid"><br>
+		Employee-Name:<input type="text" name="ename"><br>
+		Employee-Address:<input type="text" name="eaddress"><br>
+		Employee-Salary:<input type="text" name="esal"><br>
+		Employee-Gender:
+		<input type="radio" name="gen"  value="Male">Male
+	
+		<input type="radio" name="gen"  value="Female">Female<br>
+		
+		Employee-Profile:
+		<input type="radio" id="dev" name="ef" value="Developer">Developer
+		
+		<input type="radio" id="tes" name="ef" value="Tester">Tester
+		
+		<input type="radio" id="rq" name="ef" value="QA">QA<br>
+		
+		
+		Employee-Hobbies:
+		<input type="checkbox" id="read" name="eb" value="Reading">
+		 <label for="read">Reading</label>
+		 <input type="checkbox" id="write" name="eb" value="Writing">
+		 <label for="write">Writing</label>
+		 <input type="checkbox" id="search" name="eb" value="Searching">
+		<label for="search">Searching</label>
+		<input type="checkbox" id="code" name="eb" value="Coding">
+		<label for="code">Coding</label><br>
+		 
+		<input type="Submit" value="Display">
+	</form>
+	
+</body>
+</html>
+
+web.xml
+--------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<welcome-file-list>
+		<welcome-file>
+			Employee.html
+		</welcome-file>
+	</welcome-file-list>
+</web-app>
+
+
+
+Employee.java
+----------------
+package Test;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+
+@WebServlet("/dis")
+public class Employee implements Servlet
+{
+
+	@Override
+	public void init(ServletConfig scf) throws ServletException {
+		//No code
+		
+	}
+	
+	@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException 
+	{
+
+		String eId = req.getParameter("eid");
+		String eName = req.getParameter("ename");
+		String eAdd = req.getParameter("eaddress");
+		Long eSalary = Long.parseLong(req.getParameter("esal"));
+		String Gender = req.getParameter("gen");
+		String Profile = req.getParameter("ef");
+		String Hobbies[] = req.getParameterValues("eb");
+		
+		PrintWriter pw = res.getWriter();
+		res.setContentType("text/html");
+		pw.println("Employee-Id: "+eId+"<br>");
+		pw.println("Employee-Name: "+eName+"<br>");
+		pw.println("Employee-Address: "+eAdd+"<br>");
+		pw.println("Employee-Salary: "+eSalary+"<br>");
+		pw.println("Employee-Gender: "+Gender+"<br>");
+		pw.println("Employee-Profile: "+Profile+"<br>");
+		pw.println("Employee-Hobbies: "+Arrays.toString(Hobbies)+"<br>");
+
+		
+	}
+	
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getServletInfo() 
+	{
+		return "This Servlet will display Customer details";
+	}
+
+	@Override
+	public ServletConfig getServletConfig() 
+	{
+		return this.getServletConfig();
+	}
+
+	
+
+}
+
+o/p:-
+Employee-Id: 111
+Employee-Name: kavya
+Employee-Address: SR nagar,Ameerpet,Hyderabad
+Employee-Salary: 20000
+Employee-Gender: Female
+Employee-Profile: Developer
+Employee-Hobbies: [Reading, Writing, Coding]
