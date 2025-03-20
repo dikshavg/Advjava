@@ -1,0 +1,590 @@
+PROJECT NAME:STUDENT MANAGEMENT
+```````````````````````````````
+STEP 1:->
+---------
+DB Table : Admin71
+(uaname,pword,fname,lname,city,mid,phno)
+primary key : uname and pword
+
+create table Admin71(uname varchar2(15),pword varchar2(15),fname varchar2(15),
+lname varchar2(15),city varchar2(15),mid varchar2(25),phno number(15),
+primary key(uname,pword));
+
+Table created.
+
+SQL> desc Admin71;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ UNAME                                     NOT NULL VARCHAR2(15)
+ PWORD                                     NOT NULL VARCHAR2(15)
+ FNAME                                              VARCHAR2(15)
+ LNAME                                              VARCHAR2(15)
+ CITY                                               VARCHAR2(15)
+ MID                                                VARCHAR2(25)
+ PHNO                                               NUMBER(15)
+
+
+SQL> insert into Admin71 values('nit.v','mzu672','V','M','Hyd','V@gmail',9898981234);
+
+1 row created.
+
+SQL> select * from Admin71;
+
+UNAME           PWORD           FNAME           LNAME           CITY    MID                             PHNO         
+--------------- --------------- --------------- --------------- ----- ----------         -------------------------
+
+nit.v           mzu672          V               M               Hyd    V@gmail                   9898981234
+======================================================================================================================================================================================
+STEP 2:->
+---------
+Create Interface from package:
+------------------------------
+package test;
+
+public interface DBInfo {
+	public static final String
+	driver="oracle.jdbc.driver.OracleDriver";
+	public static final String
+	dbURL="jdbc:oracle:thin:@localhost:1521:xe";
+	public static final String dbUName="system";
+	public static final String dbPWord="tiger";
+	}
+=======================================================================================================================================================================================
+STEP 3:->
+----------
+Create .java file by using class in package:
+--------------------------------------------
+package test;
+import java.sql.*;
+public class DBConnection 
+{
+	private static Connection con=null;
+	private  DBConnection() {}
+	static 
+	{
+		try {
+		Class.forName(DBInfo.driver);
+		con = DriverManager.getConnection
+		(DBInfo.dbURL,DBInfo.dbUName,DBInfo.dbPWord);
+		}catch(Exception e) {
+		e.printStackTrace();
+		}
+		}
+		public static Connection getCon()
+		{
+		return con;
+		}	
+		}
+--------------------------------------------------------------------------
+ANOTHER .java file:
+------------------
+package test;
+import java.io.*;
+@SuppressWarnings("serial")
+public class AdminBean implements Serializable 
+{
+	private String uName,pWord,fName,lName,city,mId;
+	private long phNo;
+	public AdminBean() {}
+	public String getuName() {
+		return uName;
+	}
+	public void setuName(String uName) {
+		this.uName = uName;
+	}
+	public String getpWord() {
+		return pWord;
+	}
+	public void setpWord(String pWord) {
+		this.pWord = pWord;
+	}
+	public String getfName() {
+		return fName;
+	}
+	public void setfName(String fName) {
+		this.fName = fName;
+	}
+	public String getlName() {
+		return lName;
+	}
+	public void setlName(String lName) {
+		this.lName = lName;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getmId() {
+		return mId;
+	}
+	public void setmId(String mId) {
+		this.mId = mId;
+	}
+	public long getPhNo() {
+		return phNo;
+	}
+	public void setPhNo(long phNo) {
+		this.phNo = phNo;
+	}
+		
+	
+	}
+============================================================================================================================================================================================
+STEP 4:->
+---------
+Create html file in webapp:
+---------------------------
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<a href="StudentLogin.html">StudentLogin</a>
+<a href="AdminLogin.html">AdminLogin</a>
+</body>
+</html>
+--------------------------------------------------------------
+ANOTHER html file:
+--------------------
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="admin" method="post">
+UserName:<input type="text" name="uname"><br>
+Password:<input type="password" name="pword"><br>
+<input type="submit" value="AdminLogin">
+</form>
+
+</body>
+</html>
+============================================================================================================================================================================================
+STEP 5:->
+---------
+Create web.xml file from web-INF:
+---------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+<welcome-file-list>
+<welcome-file>
+home.html
+</welcome-file>
+</welcome-file-list>
+</web-app>
+=======================================================================================
+STEP 6:->
+---------
+Create .java file :
+-------------------
+package test;
+import java.sql.*;
+public class AdminLoginDAO
+{
+	public AdminBean ab = null;
+	public AdminBean login(String uN,String pW)
+	{
+	try {
+		Connection con=DBConnection.getCon();
+		PreparedStatement ps=con.prepareStatement
+				("select * from Admin71 where uname=? and pword=?");
+		ps.setString(1, uN);
+		ps.setString(2, pW);
+		
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+		ab = new AdminBean();
+		ab.setuName(rs.getString(1));
+		ab.setpWord(rs.getString(2));
+		ab.setfName(rs.getString(3));
+		ab.setlName(rs.getString(4));
+		ab.setCity(rs.getString(5));
+		ab.setmId(rs.getString(6));
+		ab.setPhNo(rs.getLong(7));
+		}
+		}catch(Exception e) {
+		e.printStackTrace();
+		}
+		return ab;
+		}
+		}
+-----------------------------------------------------------------------------------
+Another .java file:
+-------------------
+{
+String uN = req.getParameter(&quot;uname&quot;);
+String pW = req.getParameter(&quot;pword&quot;);
+AdminBean ab = new AdminLoginDAO().login(uN, pW);
+if(ab==null) {
+req.setAttribute(&quot;msg&quot;,&quot;Invalid Login process...&lt;br&gt;&quot;);
+req.getRequestDispatcher(&quot;Msg.jsp&quot;).forward(req, res);
+}else {
+HttpSession hs = req.getSession();//Creating new Session
+hs.setAttribute(&quot;abean&quot;, ab);//AdminBean is added to Session
+req.getRequestDispatcher(&quot;AdminLoginSuccess.jsp&quot;).forward(req, res);
+}
+}
+}
+=========================================================================================================================================================================================
+STEP 7:->
+----------
+Create .jsp file in webapp:
+---------------------------
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="test.AdminBean"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+
+AdminBean ab = (AdminBean)session.getAttribute("abean");
+out.println("Welcome Admin : "+ab.getfName()+"<br>");
+%>
+<a href="Student.html">AddStudent</a>
+<a href="view">ViewAllStudents</a>
+<a href="logout">Logout</a>
+</body>
+</html>
+---------------------------------------------------------------------------------
+Another .jsp file:
+------------------
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+String msg = (String)request.getAttribute("msg");
+out.println(msg);
+%>
+<%@include file="home.html" %>
+</body>
+</html>
+
+NOTE:RUN the project and check username and password are valid or not of Admin file
+=====
+if not valid==>check u connected ojdbc11 jarfile to this project or not'''''if not copy jarfile from folder and paste in web-INF->Lib(paste)
+
+====================================================================================================================================================================================
+STEP 8:->
+---------
+DB Tables:
+Student72(rollno,name,course,totmarks,per,result)
+Primary Key : rollno
+Marks71(rollno,CoreJave,AdvJava,UI,DB,Tools)
+Primary Key : rollno
+
+create table Student72(rollno varchar2(15),name varchar2(15),course varchar2(10),
+totmarks number(10),per number(10,2),result varchar2(10),primary key(rollno));
+
+Table created.
+
+SQL> desc Student72;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ROLLNO                                    NOT NULL VARCHAR2(15)
+ NAME                                               VARCHAR2(15)
+ COURSE                                             VARCHAR2(10)
+ TOTMARKS                                           NUMBER(10)
+ PER                                                NUMBER(10,2)
+ RESULT                                             VARCHAR2(10)
+
+create table Marks71(rollno varchar2(15),CoreJava number(10),AdvJava number(10),
+UI number(10),DB number(10),tools number(10),primary key(rollno));
+
+Table created.
+
+SQL> desc Marks71;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ROLLNO                                    NOT NULL VARCHAR2(15)
+ COREJAVA                                           NUMBER(10)
+ ADVJAVA                                            NUMBER(10)
+ UI                                                 NUMBER(10)
+ DB                                                 NUMBER(10)
+ TOOLS                                              NUMBER(10)
+============================================================================================
+STEP 9:->
+---------
+Create .java file:
+-------------------
+package test;
+import java.io.*;
+@SuppressWarnings("serial")
+public class MarksBean implements Serializable
+{
+	private int coreJava,advJava,ui,db,tools;
+	public MarksBean() {}
+	public int getCoreJava() {
+		return coreJava;
+	}
+	public void setCoreJava(int coreJava) {
+		this.coreJava = coreJava;
+	}
+	public int getAdvJava() {
+		return advJava;
+	}
+	public void setAdvJava(int advJava) {
+		this.advJava = advJava;
+	}
+	public int getUi() {
+		return ui;
+	}
+	public void setUi(int ui) {
+		this.ui = ui;
+	}
+	public int getDb() {
+		return db;
+	}
+	public void setDb(int db) {
+		this.db = db;
+	}
+	public int getTools() {
+		return tools;
+	}
+	public void setTools(int tools) {
+		this.tools = tools;
+	}
+	
+
+}
+----------------------------------------------------------------------------
+package test;
+import java.io.*;
+@SuppressWarnings("serial")
+public class StudentBean implements Serializable {
+	private String rollNo,name,course;
+	private MarksBean mk = new MarksBean();
+	public StudentBean() {}
+	public String getRollNo() {
+		return rollNo;
+	}
+	public void setRollNo(String rollNo) {
+		this.rollNo = rollNo;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getCourse() {
+		return course;
+	}
+	public void setCourse(String course) {
+		this.course = course;
+	}
+	public MarksBean getMk() {
+		return mk;
+	}
+	public void setMk(MarksBean mk) {
+		this.mk = mk;
+	}
+	
+
+}
+====================================================================================================================================================================
+STEP 10:->
+----------
+Create html file from webapp:
+-------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="addStudent" method="post">
+RollNo:<input type="text" name="rollno"><br>
+Name:<input type="text" name="name"><br>
+Course:<input type="text" name="course"><br>
+Marks of CoreJava:<input type="text" name="cjava"><br>
+Marks of AdvJava:<input type="text" name="ajava"><br>
+Marks of UI:<input type="text" name="ui"><br>
+Marks of DB:<input type="text" name="db"><br>
+Marks of Tools:<input type="text" name="tools"><br>
+<input type="submit" value="AddStudent">
+</form>
+</body>
+</html>
+=====================================================================================================================================================================
+STEP 11:->
+-----------
+Create .java file:
+------------------
+package test;
+import java.sql.*;
+public class AddStudentDAO
+{
+	public int k = 0;
+
+	public int insert(StudentBean sb)
+	{
+	try {
+	Connection con = DBConnection.getCon();
+	PreparedStatement ps1 = con.prepareStatement("insert into Student71 values(?,?,?,?,?,?)");
+	PreparedStatement ps2 = con.prepareStatement("insert into Marks71 values(?,?,?,?,?,?)");
+	ps1.setString(1, sb.getRollNo());
+	ps1.setString(2, sb.getName());
+	ps1.setString(3, sb.getCourse());
+	ps1.setInt(4, sb.getTotMarks());
+	ps1.setFloat(5, sb.getPer());
+	ps1.setString(6, sb.getResult());
+	int p = ps1.executeUpdate();
+	if(p>0) {
+		ps2.setString(1, sb.getRollNo());
+		ps2.setInt(2, sb.getMk().getCoreJava());
+		ps2.setInt(3, sb.getMk().getAdvJava());
+		ps2.setInt(4, sb.getMk().getUi());
+		ps2.setInt(5, sb.getMk().getDb());
+		ps2.setInt(6, sb.getMk().getTools());
+		k = ps2.executeUpdate();
+		}
+		}catch(Exception e) {
+		e.printStackTrace();
+		}
+		return k;
+		}
+		}
+-----------------------------------------------------------------------------------
+Another .java file:
+-------------------
+package test;
+import java.io.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+@SuppressWarnings("serial")
+
+@WebServlet("/addStudent")
+public class AddStudentServlet extends HttpServlet
+{
+	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws
+	ServletException,IOException
+	{
+		HttpSession hs = req.getSession(false);
+		if(hs==null) {
+		req.setAttribute("msg","Session Expired....<br>");
+		req.getRequestDispatcher("Msg.jsp").forward(req, res);
+		}else {
+			StudentBean sb = new StudentBean();
+			sb.setRollNo(req.getParameter("rollno"));
+			sb.setName(req.getParameter("name"));
+			sb.setCourse(req.getParameter("course"));
+			int cJ = Integer.parseInt(req.getParameter("cjava"));
+			int aJ = Integer.parseInt(req.getParameter("ajava"));
+			int ui = Integer.parseInt(req.getParameter("ui"));
+			int db = Integer.parseInt(req.getParameter("db"));
+			int tools = Integer.parseInt(req.getParameter("tools"));
+			int totMarks = cJ+aJ+ui+db+tools;
+			float per = (float)totMarks/5;
+			String result = null;
+			if(per>=70 && per<=100) result="A";
+			else if(per>=60 && per<70) result="B";
+			else if(per>=50 && per<60) result="C";
+			else result ="D";
+			sb.setTotMarks(totMarks);
+			sb.setPer(per);
+			sb.setResult(result);
+			sb.getMk().setCoreJava(cJ);
+			sb.getMk().setAdvJava(aJ);
+			sb.getMk().setUi(ui);
+			sb.getMk().setDb(db);
+			sb.getMk().setTools(tools);
+			int k = new AddStudentDAO().insert(sb);
+			if(k>0) {
+				req.setAttribute("msg", "Student Added Successfully....<br>");
+				req.getRequestDispatcher("AddStudent.jsp").forward(req, res);
+				}
+				}
+				}
+	}
+======================================================================================================================================================================
+STEP 12:->
+----------
+Create the jsp file from webapp:
+--------------------------------
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="test.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+AdminBean ab = (AdminBean)session.getAttribute("abean");
+String msg = (String)request.getAttribute("msg");
+out.println("Page belongs to Admin:"+ab.getfName()+"<br>");
+out.println(msg);
+%>
+<a href="student.html">AddStudent</a>
+<a href="view">ViewAllStudents</a>
+<a href="logout">Logout</a>
+</body>
+</html>
+======================================================================================================================================================================
+STEP 13:->
+-----------
+Create .java file:
+------------------
+package test;
+import java.util.*;
+import java.sql.*;
+public class ViewAllStudentsDAO
+{
+	public ArrayList<StudentBean> al = new ArrayList<StudentBean>();
+	public ArrayList<StudentBean> retrieve()
+	{
+	try {
+	Connection con = DBConnection.getCon();
+	PreparedStatement ps1 = con.prepareStatement
+	("select * from Student72");
+	PreparedStatement ps2 = con.prepareStatement("Select * from Marks71");
+	ResultSet rs1 = ps1.executeQuery();
+	ResultSet rs2 = ps2.executeQuery();
+	while(rs1.next() && rs2.next())
+	{
+		StudentBean sb = new StudentBean();
+		sb.setRollNo(rs1.getString(1));
+		sb.setName(rs1.getString(2));
+		sb.setCourse(rs1.getString(3));
+		sb.setTotMarks(rs1.getInt(4));
+		sb.setPer(rs1.getFloat(5));
+		sb.setResult(rs1.getString(6));
+		sb.getMk().setCoreJava(rs2.getInt(2));
+		sb.getMk().setAdvJava(rs2.getInt(3));
+		sb.getMk().setUi(rs2.getInt(4));
+		sb.getMk().setDb(rs2.getInt(5));
+		sb.getMk().setTools(rs2.getInt(6));
+		al.add(sb);
+	}//end of loop
+	}catch(Exception e) {
+	e.printStackTrace();
+	}
+	return al;
+	}
+	}
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
